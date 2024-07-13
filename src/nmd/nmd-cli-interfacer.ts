@@ -24,4 +24,13 @@ export class NmdCliInterfacer {
                 
         this.exec(`generate dossier -p ${path.path} -f`, f);
     }
+
+    public async addDocumentToDossier(path: vscode.Uri, documentName: string, f: (error: ExecException | null, stdout: string, stderr: string) => void) {
+                
+        this.exec(`dossier -p ${path.path} add -d ${documentName}`, f);
+    }
+
+    public async compileHtmlDossier(inputPath: vscode.Uri, outputPath: vscode.Uri, f: (error: ExecException | null, stdout: string, stderr: string) => void) {
+        this.exec(`compile -f html --force dossier -i ${inputPath.path} -o ${outputPath.path}`, f); 
+    }
 }

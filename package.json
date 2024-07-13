@@ -2,7 +2,7 @@
   "name": "nmd-vscode",
   "displayName": "NMD x VS Code",
   "description": "Official NMD extension",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.91.0"
   },
@@ -13,7 +13,18 @@
     "commands": [
       {
         "command": "nmd-vscode.create-dossier",
-        "title": "Create new dossier"
+        "title": "Create new dossier",
+        "category": "NMD"
+      },
+      {
+        "command": "nmd-vscode.compile-dossier",
+        "title": "Compile dossier",
+        "category": "NMD"
+      },
+      {
+        "command": "nmd-vscode.add-document-to-dossier",
+        "title": "Add document to dossier",
+        "category": "NMD"
       }
     ]
   },

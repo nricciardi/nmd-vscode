@@ -5,7 +5,8 @@ toc:
   page_numbers: false
   plain: false
   maximum_heading_level: 4
-documents: []
+documents:
+- ./new-doc.nmd
 style:
   theme: Light
   styles: []

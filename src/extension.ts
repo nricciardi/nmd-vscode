@@ -8,12 +8,26 @@ export function activate(context: vscode.ExtensionContext) {
 
 	console.log('Congratulations, your extension "nmd-vscode" is now active!');
 
-	const disposable = vscode.commands.registerCommand('nmd-vscode.create-dossier', async () => {
+	const createDossierCommand = vscode.commands.registerCommand('nmd-vscode.create-dossier', async () => {
 
 		commandsManager.handleCreateDossier();
 	});
 
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(createDossierCommand);
+
+	const AddDocumentToDossierCommand = vscode.commands.registerCommand('nmd-vscode.add-document-to-dossier', async () => {
+
+		commandsManager.handleAddDocumentToDossier();
+	});
+
+	context.subscriptions.push(createDossierCommand);
+
+	const compileDossierCommand = vscode.commands.registerCommand('nmd-vscode.compile-dossier', async () => {
+
+		commandsManager.handleCompileDossier();
+	});
+
+	context.subscriptions.push(compileDossierCommand);
 }
 
 export function deactivate() {}
