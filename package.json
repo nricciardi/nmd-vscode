@@ -17,13 +17,28 @@
         "category": "NMD"
       },
       {
-        "command": "nmd-vscode.compile-dossier",
-        "title": "Compile dossier",
+        "command": "nmd-vscode.compile-current-dossier",
+        "title": "Compile current dossier",
         "category": "NMD"
       },
       {
         "command": "nmd-vscode.add-document-to-dossier",
         "title": "Add document to dossier",
+        "category": "NMD"
+      },
+      {
+        "command": "nmd-vscode.compile-file",
+        "title": "Compile file",
+        "category": "NMD"
+      },
+      {
+        "command": "nmd-vscode.compile-dossier",
+        "title": "Compile dossier",
+        "category": "NMD"
+      },
+      {
+        "command": "nmd-vscode.watch-current-dossier",
+        "title": "Watch current dossier",
         "category": "NMD"
       }
     ]

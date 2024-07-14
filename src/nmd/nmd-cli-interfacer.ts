@@ -20,9 +20,9 @@ export class NmdCliInterfacer {
         exec(command, f);
     }
 
-    public async createDossier(path: vscode.Uri, f: (error: ExecException | null, stdout: string, stderr: string) => void) {
+    public async createDossier(name: string, path: vscode.Uri, f: (error: ExecException | null, stdout: string, stderr: string) => void) {
                 
-        this.exec(`generate dossier -p ${path.path} -f`, f);
+        this.exec(`generate dossier -p ${path.path} -f -n "${name}"`, f);
     }
 
     public async addDocumentToDossier(path: vscode.Uri, documentName: string, f: (error: ExecException | null, stdout: string, stderr: string) => void) {
@@ -30,7 +30,38 @@ export class NmdCliInterfacer {
         this.exec(`dossier -p ${path.path} add -d ${documentName}`, f);
     }
 
-    public async compileHtmlDossier(inputPath: vscode.Uri, outputPath: vscode.Uri, f: (error: ExecException | null, stdout: string, stderr: string) => void) {
-        this.exec(`compile -f html --force dossier -i ${inputPath.path} -o ${outputPath.path}`, f); 
+    public async compileDossier(inputPath: vscode.Uri, outputPath: vscode.Uri, format: string, theme: vscode.ColorTheme, f: (error: ExecException | null, stdout: string, stderr: string) => void) {
+        
+        const t = NmdCliInterfacer.parseTheme(theme);
+        
+        this.exec(`compile -m ${t} -f ${format} --force dossier -i ${inputPath.path} -o ${outputPath.path}`, f); 
+    }
+
+    public async compileFile(inputPath: vscode.Uri, outputPath: vscode.Uri, format: string, theme: vscode.ColorTheme, f: (error: ExecException | null, stdout: string, stderr: string) => void) {
+        
+        const t = NmdCliInterfacer.parseTheme(theme);
+        
+        this.exec(`compile -m ${t} -f ${format} --force file -i ${inputPath.path} -o ${outputPath.path}`, f); 
+    }
+
+    public async watchDossier(inputPath: vscode.Uri, outputPath: vscode.Uri, format: string, theme: vscode.ColorTheme, f: (error: ExecException | null, stdout: string, stderr: string) => void) {
+        const t = NmdCliInterfacer.parseTheme(theme);
+        
+        this.exec(`compile -w -m ${t} -f ${format} --force file -i ${inputPath.path} -o ${outputPath.path}`, f); 
+    }
+
+    private static parseTheme(theme: vscode.ColorTheme) {
+        let t = "light";
+
+        if (theme.kind == vscode.ColorThemeKind.Dark)
+            t = "dark";
+
+        if (theme.kind == vscode.ColorThemeKind.HighContrast)
+            t = "high-contrast";
+
+        if (theme.kind == vscode.ColorThemeKind.HighContrast)
+            t = "high-contrast";
+
+        return t;
     }
 }

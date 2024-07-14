@@ -11,37 +11,37 @@ export class CommandsManager {
 
         const options: vscode.OpenDialogOptions = {
             canSelectMany: false,
-            openLabel: 'Select',
+            openLabel: 'Select a directory',
             canSelectFiles: false,
             canSelectFolders: true
         };
 
         const folderUri = await vscode.window.showOpenDialog(options);
 
-        const title = await vscode.window.showInputBox({ prompt: 'Enter the title for the dossier' });
+        const name = await vscode.window.showInputBox({ prompt: 'Enter the name for the dossier' });
 
-		if (title && folderUri && folderUri[0]) {
+		if (name && folderUri && folderUri[0]) {
 
             const nmdCliInterfacer = new NmdCliInterfacer();
 
-            const lastDirName = buildFileName(title);
+            const lastDirName = buildFileName(name);
     
             const p = vscode.Uri.parse(path.join(folderUri[0].path, lastDirName));
 
-			await nmdCliInterfacer.createDossier(p, (err, stdout, stderr) => {
+			await nmdCliInterfacer.createDossier(name, p, (err, stdout, stderr) => {
 
                 if(err) {
                     vscode.window.showErrorMessage(err.message);
                     return;
                 }
 
-                vscode.window.showInformationMessage(`Dossier "${title}" created`);
+                vscode.window.showInformationMessage(`Dossier "${name}" created`);
                 
                 vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.length : 0, null, { uri: p })
             });
 
 		} else {
-            vscode.window.showErrorMessage("Dossier title is invalid");
+            vscode.window.showErrorMessage("Dossier name is invalid");
         }
     }
 
@@ -90,7 +90,7 @@ export class CommandsManager {
         }
     }
 
-    public async handleCompileDossier() {
+    public async handleCompileCurrentDossier() {
 
         try {
 
@@ -102,7 +102,9 @@ export class CommandsManager {
 
             const nmdCliInterfacer = new NmdCliInterfacer();
 
-            nmdCliInterfacer.compileHtmlDossier(inputPath, outputPath, (err, stdout, stderr) => {
+            const theme = vscode.window.activeColorTheme;
+
+            nmdCliInterfacer.compileDossier(inputPath, outputPath, "html", theme, (err, stdout, stderr) => {
 
                 if(err) {
                     vscode.window.showErrorMessage(err.message);
@@ -110,6 +112,133 @@ export class CommandsManager {
                 }
 
                 vscode.window.showInformationMessage(`Dossier compiled`);
+                
+                const htmlNmdPreviewPanel = new HtmlNmdPreviewPanel(outputPath);
+
+                htmlNmdPreviewPanel.renderPanel();
+            });
+
+        } catch (error) {
+            // TODO
+        }
+    }
+
+    public async handleWatchCurrentDossier() {
+
+        try {
+
+            const dossierPath = this.getOpenedDossier();
+
+            const inputPath = dossierPath.uri;
+
+            const outputPath = vscode.Uri.parse(path.join(inputPath.path, "build", `${buildFileName(dossierPath.name)}.html`));
+
+            const nmdCliInterfacer = new NmdCliInterfacer();
+
+            const theme = vscode.window.activeColorTheme;
+
+            nmdCliInterfacer.watchDossier(inputPath, outputPath, "html", theme, (err, stdout, stderr) => {
+
+                if(err) {
+                    vscode.window.showErrorMessage(err.message);
+                    return;
+                }
+
+                vscode.window.showInformationMessage(`Watching dossier...`);
+
+                const htmlNmdPreviewPanel = new HtmlNmdPreviewPanel(outputPath);
+
+                htmlNmdPreviewPanel.renderPanel();
+            });
+
+        } catch (error) {
+            // TODO
+        }
+    }
+
+    public async handleCompileFile() {
+
+        try {
+
+            const options: vscode.OpenDialogOptions = {
+                canSelectMany: false,
+                openLabel: 'Select file',
+                canSelectFiles: true,
+                canSelectFolders: false
+            };
+    
+            const filePath = await vscode.window.showOpenDialog(options);
+
+            if (!filePath || !filePath[0]) {
+                vscode.window.showErrorMessage("file not found");
+                return;
+            }
+
+            const inputPath = filePath[0];          
+
+            const outputPath = vscode.Uri.parse(path.join(
+                                    path.dirname(inputPath.path),
+                                    "build",
+                                    buildFileName(path.basename(inputPath.path), "html")
+                                ));
+
+            const nmdCliInterfacer = new NmdCliInterfacer();
+
+            const theme = vscode.window.activeColorTheme;
+
+            nmdCliInterfacer.compileFile(inputPath, outputPath, "html", theme, (err, stdout, stderr) => {
+
+                if(err) {
+                    vscode.window.showErrorMessage(err.message);
+                    return;
+                }
+
+                vscode.window.showInformationMessage(`File compiled and saved in "${outputPath.path}"`);
+
+                const htmlNmdPreviewPanel = new HtmlNmdPreviewPanel(outputPath);
+
+                htmlNmdPreviewPanel.renderPanel();
+            });
+
+        } catch (error) {
+            // TODO
+        }
+    }
+
+    public async handleCompileDossier() {
+
+        try {
+
+            const options: vscode.OpenDialogOptions = {
+                canSelectMany: false,
+                openLabel: 'Select dossier',
+                canSelectFiles: false,
+                canSelectFolders: true
+            };
+    
+            const dossierPath = await vscode.window.showOpenDialog(options);
+
+            if (!dossierPath || !dossierPath[0]) {
+                vscode.window.showErrorMessage("dossier not found");
+                return;
+            }
+
+            const inputPath = dossierPath[0];
+
+            const outputPath = vscode.Uri.parse(path.join(inputPath.path, "build", `${buildFileName(path.basename(inputPath.path))}.html`));
+
+            const nmdCliInterfacer = new NmdCliInterfacer();
+
+            const theme = vscode.window.activeColorTheme;
+
+            nmdCliInterfacer.compileDossier(inputPath, outputPath, "html", theme, (err, stdout, stderr) => {
+
+                if(err) {
+                    vscode.window.showErrorMessage(err.message);
+                    return;
+                }
+
+                vscode.window.showInformationMessage(`Dossier compiled and saved in "${inputPath.path}"`);
                 
                 const htmlNmdPreviewPanel = new HtmlNmdPreviewPanel(outputPath);
 

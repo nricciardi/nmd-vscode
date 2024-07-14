@@ -22,12 +22,33 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(createDossierCommand);
 
+	const compileCurrentDossierCommand = vscode.commands.registerCommand('nmd-vscode.compile-current-dossier', async () => {
+
+		commandsManager.handleCompileCurrentDossier();
+	});
+
+	context.subscriptions.push(compileCurrentDossierCommand);
+
 	const compileDossierCommand = vscode.commands.registerCommand('nmd-vscode.compile-dossier', async () => {
 
 		commandsManager.handleCompileDossier();
 	});
 
 	context.subscriptions.push(compileDossierCommand);
+
+	const compileFileCommand = vscode.commands.registerCommand('nmd-vscode.compile-file', async () => {
+
+		commandsManager.handleCompileFile();
+	});
+
+	context.subscriptions.push(compileFileCommand);
+
+	const watchDossierCommand = vscode.commands.registerCommand('nmd-vscode.watch-current-dossier', async () => {
+
+		commandsManager.handleWatchCurrentDossier();
+	});
+
+	context.subscriptions.push(watchDossierCommand);
 }
 
 export function deactivate() {}
