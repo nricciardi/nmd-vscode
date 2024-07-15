@@ -6,7 +6,7 @@
   "engines": {
     "vscode": "^1.91.0"
   },
-  "categories": [],
+  "categories": ["Snippets", "Other", "Formatters", "Language Packs", "Extension Packs"],
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
@@ -41,6 +41,24 @@
         "title": "Watch current dossier",
         "category": "NMD"
       }
+    ],
+    "snippets": [
+      {
+        "language": "nmd",
+        "path": "./src/snippets/nmd-snippets.json"
+      },
+      {
+        "language": "markdown",
+        "path": "./src/snippets/nmd-snippets.json"
+      }
+    ],
+    "languages": [
+      {
+        "id": "nmd",
+        "extensions": [
+          ".nmd"
+        ]
+      }
     ]
   },
   "scripts": {
@@ -61,5 +79,8 @@
     "@vscode/test-electron": "^2.4.0",
     "eslint": "^8.57.0",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0"
   }
 }

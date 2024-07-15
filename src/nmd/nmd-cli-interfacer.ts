@@ -44,12 +44,6 @@ export class NmdCliInterfacer {
         this.exec(`compile -m ${t} -f ${format} --force file -i ${inputPath.path} -o ${outputPath.path}`, f); 
     }
 
-    public async watchDossier(inputPath: vscode.Uri, outputPath: vscode.Uri, format: string, theme: vscode.ColorTheme, f: (error: ExecException | null, stdout: string, stderr: string) => void) {
-        const t = NmdCliInterfacer.parseTheme(theme);
-        
-        this.exec(`compile -w -m ${t} -f ${format} --force file -i ${inputPath.path} -o ${outputPath.path}`, f); 
-    }
-
     private static parseTheme(theme: vscode.ColorTheme) {
         let t = "light";
 

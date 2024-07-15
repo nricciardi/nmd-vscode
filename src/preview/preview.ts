@@ -9,18 +9,21 @@ export class HtmlNmdPreviewPanel {
 
     private _artifactPath: vscode.Uri;
 
-    private panel?: vscode.WebviewPanel;
+    private _panel?: vscode.WebviewPanel;
+
+    public onDispose?: () => void;
 
     public get artifactPath() {
         return this._artifactPath;
     }
     
-    constructor(artifactPath: vscode.Uri) {
+    constructor(artifactPath: vscode.Uri, onDispose?: () => void) {
         this._artifactPath = artifactPath;
+        this.onDispose = onDispose;
     }
 
     public createPanel() {
-        this.panel = vscode.window.createWebviewPanel(
+        this._panel = vscode.window.createWebviewPanel(
             HtmlNmdPreviewPanel.panelViewType,
             HtmlNmdPreviewPanel.panelTitle,
             vscode.ViewColumn.Beside,
@@ -29,10 +32,14 @@ export class HtmlNmdPreviewPanel {
                 
             }
         );
+
+        if (this.onDispose) {
+            this._panel.onDidDispose(this.onDispose);
+        }
     }
 
     public renderPanel() {
-        if (!this.panel) {
+        if (!this._panel) {
             this.createPanel();
         }
 
@@ -43,9 +50,9 @@ export class HtmlNmdPreviewPanel {
         const filePath = this.artifactPath.fsPath;
         const fileContent = fs.readFileSync(filePath, 'utf-8');
 
-        if (this.panel) {
+        if (this._panel) {
 
-            this.panel.webview.html = fileContent;
+            this._panel.webview.html = fileContent;
         }
     }
   }

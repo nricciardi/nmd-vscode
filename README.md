@@ -38,16 +38,23 @@ Add a document to the opened dossier in workspace.
 nmd dossier -p <dossier-path> add -d <document-name>`
 ```
 
-### Compile dossier
+### Compile (current) dossier
 
-Compile the opened dossier in workspace.
+Compile the opened dossier (in workspace, `current`) or a selected one.
 
 ```shell
-nmd compile -f html --force dossier -i <dossier-path> -o <dossier-path>/build/<output>.html`
+nmd compile -m <code-theme> -f html --force dossier -i <dossier-path> -o <dossier-path>/build/<output>.html`
 ```
 
 ### Compile file
 
-TODO
+Compile selected file.
 
+```shell
+compile -m <code-theme> -f html --force file -i <input-file-path> -o <output-path>
+```
+
+### Watch current dossier
+
+Watch and compile current dossier in workspace. This command doesn't use `nmd compile -w dossier`, but it watches files (ignoring `build/*.html` preventing compilation loops) directly using `chokidar` library.
 

@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { NmdCliInterfacer } from '../nmd/nmd-cli-interfacer';
 import path from 'path';
+import chokidar from 'chokidar';
 import { buildFileName } from '../utilities/fileUtility';
 import { HtmlNmdPreviewPanel } from '../preview/preview';
 
@@ -137,19 +138,50 @@ export class CommandsManager {
 
             const theme = vscode.window.activeColorTheme;
 
-            nmdCliInterfacer.watchDossier(inputPath, outputPath, "html", theme, (err, stdout, stderr) => {
-
-                if(err) {
-                    vscode.window.showErrorMessage(err.message);
-                    return;
-                }
-
-                vscode.window.showInformationMessage(`Watching dossier...`);
-
-                const htmlNmdPreviewPanel = new HtmlNmdPreviewPanel(outputPath);
-
-                htmlNmdPreviewPanel.renderPanel();
+            const watcher = chokidar.watch(
+                [path.join(inputPath.fsPath, "**", "*")], {
+                ignored: [
+                    outputPath.fsPath,
+                    path.join(inputPath.fsPath, "assets", "**", "*"),
+                ],
+                persistent: true,
+                usePolling: true,
+                interval: 10,
+                binaryInterval: 10
             });
+
+            vscode.window.showInformationMessage(`Watching dossier ${inputPath.path}...`);
+    
+            const htmlNmdPreviewPanel = new HtmlNmdPreviewPanel(outputPath);
+
+            htmlNmdPreviewPanel.onDispose = () => {
+                watcher.close().then(() => {
+                    vscode.window.showInformationMessage(`Stop watching dossier: ${inputPath.fsPath}`);
+                })
+            };
+
+            const onWatchEvent = (path: string) => {
+
+                console.log(`new watch event on "${path}"`);
+
+                nmdCliInterfacer.compileDossier(inputPath, outputPath, "html", theme, (err, stdout, stderr) => {
+                    
+                    if(err) {
+                        vscode.window.showErrorMessage(err.message);
+                        return;
+                    }
+
+                    console.log("dossier re-compiled");
+                    
+                    
+                    htmlNmdPreviewPanel.renderPanel();
+                });
+            }
+
+            watcher
+                .on('add', path => onWatchEvent(path))
+                .on('change', path => onWatchEvent(path))
+                .on('unlink', path => onWatchEvent(path));
 
         } catch (error) {
             // TODO
