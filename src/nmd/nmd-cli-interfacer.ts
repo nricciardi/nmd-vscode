@@ -37,11 +37,11 @@ export class NmdCliInterfacer {
         this.exec(`compile -m ${t} -f ${format} --force dossier -i ${inputPath.path} -o ${outputPath.path}`, f); 
     }
 
-    public async compileFile(inputPath: vscode.Uri, outputPath: vscode.Uri, format: string, theme: vscode.ColorTheme, f: (error: ExecException | null, stdout: string, stderr: string) => void) {
+    public async buildDocument(inputPath: vscode.Uri, outputPath: vscode.Uri, format: string, theme: vscode.ColorTheme, f: (error: ExecException | null, stdout: string, stderr: string) => void) {
         
         const t = NmdCliInterfacer.parseTheme(theme);
         
-        this.exec(`compile -m ${t} -f ${format} --force file -i ${inputPath.path} -o ${outputPath.path}`, f); 
+        this.exec(`build -t ${t} -f ${format} -i ${inputPath.path} -o ${outputPath.path}`, f); 
     }
 
     private static parseTheme(theme: vscode.ColorTheme) {

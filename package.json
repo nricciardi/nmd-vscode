@@ -12,6 +12,10 @@
   "contributes": {
     "commands": [
       {
+        "command": "hello-world.showHelloWorld",
+        "title": "Hello World (Angular): Show"
+      },
+      {
         "command": "nmd-vscode.create-dossier",
         "title": "Create new dossier",
         "category": "NMD"

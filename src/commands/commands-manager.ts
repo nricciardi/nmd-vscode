@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { NmdCliInterfacer } from '../nmd/nmd-cli-interfacer';
 import path from 'path';
 import chokidar from 'chokidar';
-import { buildFileName } from '../utilities/fileUtility';
+import { buildFileName } from '../utilities/file-utility';
 import { HtmlNmdPreviewPanel } from '../preview/preview';
 
 
@@ -218,7 +218,7 @@ export class CommandsManager {
 
             const theme = vscode.window.activeColorTheme;
 
-            nmdCliInterfacer.compileFile(inputPath, outputPath, "html", theme, (err, stdout, stderr) => {
+            nmdCliInterfacer.buildDocument(inputPath, outputPath, "html", theme, (err, stdout, stderr) => {
 
                 if(err) {
                     vscode.window.showErrorMessage(err.message);

@@ -1,54 +1,62 @@
 import * as vscode from 'vscode';
 import { CommandsManager } from './commands/commands-manager';
 import { TextModifierSidebar } from './sidebar/text-modifier-sidebar';
+import { EditorPanel } from './panels/editor-panel';
 
 export function activate(context: vscode.ExtensionContext) {
 
-	const commandsManager = new CommandsManager();
+	const showHelloWorldCommand = vscode.commands.registerCommand("hello-world.showHelloWorld", () => {
+		EditorPanel.render(context.extensionUri);
+	  });
+	
+	  // Add command to the extension context
+	  context.subscriptions.push(showHelloWorldCommand);
 
-	console.log('Congratulations, your extension "nmd-vscode" is now active!');
+	// const commandsManager = new CommandsManager();
 
-	const createDossierCommand = vscode.commands.registerCommand('nmd-vscode.create-dossier', async () => {
+	// console.log('Congratulations, your extension "nmd-vscode" is now active!');
 
-		commandsManager.handleCreateDossier();
-	});
+	// const createDossierCommand = vscode.commands.registerCommand('nmd-vscode.create-dossier', async () => {
 
-	context.subscriptions.push(createDossierCommand);
+	// 	commandsManager.handleCreateDossier();
+	// });
 
-	const AddDocumentToDossierCommand = vscode.commands.registerCommand('nmd-vscode.add-document-to-dossier', async () => {
+	// context.subscriptions.push(createDossierCommand);
 
-		commandsManager.handleAddDocumentToDossier();
-	});
+	// const AddDocumentToDossierCommand = vscode.commands.registerCommand('nmd-vscode.add-document-to-dossier', async () => {
 
-	context.subscriptions.push(createDossierCommand);
+	// 	commandsManager.handleAddDocumentToDossier();
+	// });
 
-	const compileCurrentDossierCommand = vscode.commands.registerCommand('nmd-vscode.compile-current-dossier', async () => {
+	// context.subscriptions.push(createDossierCommand);
 
-		commandsManager.handleCompileCurrentDossier();
-	});
+	// const compileCurrentDossierCommand = vscode.commands.registerCommand('nmd-vscode.compile-current-dossier', async () => {
 
-	context.subscriptions.push(compileCurrentDossierCommand);
+	// 	commandsManager.handleCompileCurrentDossier();
+	// });
 
-	const compileDossierCommand = vscode.commands.registerCommand('nmd-vscode.compile-dossier', async () => {
+	// context.subscriptions.push(compileCurrentDossierCommand);
 
-		commandsManager.handleCompileDossier();
-	});
+	// const compileDossierCommand = vscode.commands.registerCommand('nmd-vscode.compile-dossier', async () => {
 
-	context.subscriptions.push(compileDossierCommand);
+	// 	commandsManager.handleCompileDossier();
+	// });
 
-	const compileFileCommand = vscode.commands.registerCommand('nmd-vscode.compile-file', async () => {
+	// context.subscriptions.push(compileDossierCommand);
 
-		commandsManager.handleCompileFile();
-	});
+	// const compileFileCommand = vscode.commands.registerCommand('nmd-vscode.compile-file', async () => {
 
-	context.subscriptions.push(compileFileCommand);
+	// 	commandsManager.handleCompileFile();
+	// });
 
-	const watchDossierCommand = vscode.commands.registerCommand('nmd-vscode.watch-current-dossier', async () => {
+	// context.subscriptions.push(compileFileCommand);
 
-		commandsManager.handleWatchCurrentDossier();
-	});
+	// const watchDossierCommand = vscode.commands.registerCommand('nmd-vscode.watch-current-dossier', async () => {
 
-	context.subscriptions.push(watchDossierCommand);
+	// 	commandsManager.handleWatchCurrentDossier();
+	// });
+
+	// context.subscriptions.push(watchDossierCommand);
 }
 
 export function deactivate() {}
